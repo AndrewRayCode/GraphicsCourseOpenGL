@@ -33,7 +33,6 @@ Multiplying two vectors is not easily visualized and not often used
 - [a,b,c] · [d,e,f] = (a * d) + (b * e) + (c * f). This is adding the multiples of each x,y,z
 - Second way to calculate dot product, a·b = |a| * |b| * cos(angle between two vectors)
 
-# Magnitude
 - |a| is magintude of a, the length of a. Vectors form right angle triangles.
 - Uses variation of pythagorean theorm
 - In 3D, it's |v| = sqrt(x^2 + y^2 + z+2)
@@ -149,7 +148,7 @@ Multiplying this by a vector scales it. Makes sense if identity matrix doesn't
 change it. Vector becomes
 [sX * x, sY * y, sZ * z, 1]
 
-# Rotaiton matrix
+# Rotation matrix
 - Rotates a vector, around the origin axis.
 - If you want to rotate around an arbitrary point in space, you'd do reverse
   translation first, then rotate, them move back
@@ -199,3 +198,95 @@ View
 Model - Model coordinates, assuming every coordinate is starting at 0,0, need
   to convert to where they are in the world, as opposed to where they were built. Model matrix is conversion from model cooridnates to world coordinates
 Projection
+
+# Projection matrix
+From the triangle video - a triangle that goes from -1,-1, up to top middle at 0,1, if you rotate it 90 degrees on its side on a 4:3 ratio screen, the base is exactly as tall as the screen, because we're not multiplying by projection matrix. the viewport is still -1 - 1
+
+# Interpolation
+
+In vertex shaders, we only work with individual attribute values, but what about values between those?
+
+A "weighted average" is passed to the fragment. It's how it knows to color all the points in between. Important for lightning and textures, for example.
+
+The fragment picked up the interpolated values. It's effectively an estimate, but it's a very accurate estimate.
+
+Interpolation happens during the *rasterization stage.*
+
+# Indexed Draws
+
+- So far we've just define 3 points of our triangle.
+- When working with more triangles, there is some annoying repetition.
+- A cube made up of trangles = 12 x 3 verts per face, or 36!
+- Instead why not define the 8 verts of the cube?
+- Also allows for less memory on graphics card
+
+Create an GL_ELEMENT_ARRAY_BUFFER in the VAO. He calles them an "index buffer
+object" or "IBO." Can reference vertices by number (index). Sometimes "element"
+is called "index", they're the same.
+
+- Can still be a pain, solution is 3d modelling software.
+
+# Projections
+
+"How we see things." 
+- Projection matrix is used to convert from "view space" to "clip space."
+- Can be used to scene a "3d" look, or an orthographic projection
+
+# Transforming between spaces
+
+"Local space": raw position of each vertex drawn relative to the origin. Local
+to the model itself.
+
+(remember model matrix = transforms, translation / rotations / scaling)
+"local space * "model matrix" = "world space"
+Aka converting it to its location in world space
+
+"World space": position in the world itself (if camera is assumed at origin)
+
+"world space" * "view matrix" = "view space"
+
+"View Space": Position of the vertex in the world relative to the camera position
+and orientation.
+
+"view space" * "projection matrix" = "clip space"
+
+"Clip space": Position of the vertex in the world *relative to the camera
+position,* as viewd in the area not to be "clipped" from the final output.
+
+"Screen space": Eventually everything is converted into screen space, we don't
+define a matrix for this, part of pipeline. Final image is placed in coordinates
+of screen itself. 0 at top left, 1 at bottom right.
+
+# Clip Space
+To create clip space, we need to define an area (frustum), NOT FRUSTRUM, of what
+is not to be clipped with a projection matrix.
+
+Two commonly used projections: ortohgraphic, perspective
+
+# Orthographic Projection
+Near Plane and Far plane. Near plane is basically where the camera is. In
+orthographic, your lines between near and far planes are parallel. So as things
+move towards you, they follow the lines, and there is no illusion of depth.
+
+# Perspective Projection
+Near plane is smaller than the far plane. "near clipping plane" and "far
+clipping plane". The frustum for perspective projections is a "truncated
+pyramid," it's a pyramid (with 4 sides) with the top pointy bit chopped off. I
+think the "near plane" (your screen, basically?) is the camera.
+
+Gives the illusion of depth. So if you project lines down this pyramid and an
+object is moving closer to the view, it will intersect more and more of the
+lines, making it appear larger, giving it the illusion of depth and getting
+closer.
+
+glm::perspective outputs a projection matrix given fov, aspect, near, far.
+- fov is crocodile mouth up and down angle
+- aspect ratio is aspect of viewport
+- near = distance of near plane for cutoff
+- far = distance of far plane for cutoff
+
+gl_Position = projection * view * model * vec4(pos, 1.0);
+
+Order is important here! Has to be projection, view, model, local
+Aka projection has to be at start. Going in reverse order, it's local space to
+world space to view space to clip space. We end up in clip space.
