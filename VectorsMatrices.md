@@ -192,3 +192,10 @@ Uniforms are global to shaders, changed in application external to shaders.
 # Uniforms vs Attributes
 Attributes are unique per point (vertex)
 Uniforms are the same ("uniform") between every shader run
+
+
+# Main matrices in 3D
+View
+Model - Model coordinates, assuming every coordinate is starting at 0,0, need
+  to convert to where they are in the world, as opposed to where they were built. Model matrix is conversion from model cooridnates to world coordinates
+Projection

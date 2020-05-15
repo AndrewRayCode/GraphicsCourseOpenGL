@@ -3,6 +3,12 @@
 #include <string.h> // strlen
 #include <cmath> // math absolute
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+glm::mat4 model = glm::mat4(1.0f);
+
 // GLEW
 #define GLEW_STATIC
 #include <GL/glew.h>
@@ -14,7 +20,7 @@
 const GLint WIDTH = 800;
 const GLint HEIGHT = 600;
 
-GLuint VAO, VBO, VBO1, shader, uniformXMove;
+GLuint VAO, VBO, VBO1, shader, uniformModelMatrix;
 
 bool direction = true;
 float triOffset = 0.0f;
@@ -29,11 +35,11 @@ static const char* vShader = "\n\
 layout(location = 0) in vec3 pos;    \n\
 layout(location = 1) in vec3 color;  \n\
 out vec3 vColor;                     \n\
-uniform float xMove;                 \n\
+uniform mat4 modelMatrix;            \n\
 void main() {                        \n\
 vColor = color;                      \n\
 // Built in value ot the shader itself. Imagine there's an out vec4. It's built in, we can't see it. The values are calculated as the graphics pipeline goes, and this value is sent to the fragment shader. These are the final positions of the vertices on the screen. Z is how far away this thing is from us \n\
-gl_Position = vec4((pos * vec3(0.4, 0.4, 1.0)) + vec3(xMove, 0.0, 0.0), 1.0); \n\
+gl_Position = modelMatrix * vec4((pos * vec3(0.4, 0.4, 1.0)), 1.0); \n\
 }                                    \n\
 ";
 
@@ -122,7 +128,7 @@ void compileShaders() {
     }
     
     // Get ID of uniform variable in compiled shader (by name)
-    uniformXMove = glGetUniformLocation(shader, "xMove");
+    uniformModelMatrix = glGetUniformLocation(shader, "modelMatrix");
 }
 
 // Create vertex array object - holds multiple VBOs
@@ -293,8 +299,12 @@ int main() {
         // what you normally do is draw everything with the same shader, draw, then reassign shader
         glUseProgram(shader);
         
+        // Create an identity matrix
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(triOffset, 0.0f, 0.0f));
+        
         // Now set the uniform to the shader at the location (after attaching the shader)
-        glUniform1f(uniformXMove, triOffset);
+        glUniformMatrix4fv(uniformModelMatrix, 1, GL_FALSE, glm::value_ptr(model));
         
         // We're working with this VAO now
         glBindVertexArray(VAO);
