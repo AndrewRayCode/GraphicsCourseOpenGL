@@ -1,0 +1,16 @@
+// Version of GLSL                  
+# version 330                       
+// Values from code below are passed into 'zero' in the shader. You can also make it search by name and not need layout. layout() is only supported since version 3.2 
+layout(location = 0) in vec3 pos;    
+layout(location = 1) in vec3 color;  
+// he uses 'v' to mean 'vertex'      
+out vec3 vColor;                     
+uniform mat4 modelMatrix;            
+uniform mat4 projectionMatrix;       
+void main() {                        
+vColor = color;                      
+// Example of swimming through 3d    
+//vColor = vec3(modelMatrix * vec4(pos, 1.0)); 
+// Built in value ot the shader itself. Imagine there's an out vec4. It's built in, we can't see it. The values are calculated as the graphics pipeline goes, and this value is sent to the fragment shader. These are the final positions of the vertices on the screen. Z is how far away this thing is from us 
+gl_Position = projectionMatrix * modelMatrix * vec4(pos, 1.0); 
+}                                    

@@ -65,6 +65,35 @@ void Shader::addShader(GLuint program, const char* code, GLenum shaderType) {
     glAttachShader(program, shdr);
 }
 
+void Shader::createFromFiles(const char* vertexLocation, const char* fragmentLocation) {
+    std::string v = readFile(vertexLocation);
+    std::string f = readFile(fragmentLocation);
+    const char* vertexCode = v.c_str();
+    const char* fragmentCode = f.c_str();
+    
+    createFromString(vertexCode, fragmentCode);
+}
+
+std::string Shader::readFile(const char* location) {
+    std::string content;
+    std::ifstream fileStream(location, std::ios::in);
+
+    if(!fileStream.is_open()) {
+        printf("Failed to load %s\n", location);
+        return "";
+    }
+    
+    std::string line = "";
+    while(!fileStream.eof()) {
+        std::getline(fileStream, line);
+        content.append(line + "\n");
+    }
+    
+    fileStream.close();
+
+    return content;
+}
+
 void Shader::createFromString(const char* vertexCode, const char* fragmentCode) {
     
     // stores shader program location in graphics card memory as ID

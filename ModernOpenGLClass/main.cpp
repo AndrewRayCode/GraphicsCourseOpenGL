@@ -10,6 +10,9 @@
 
 glm::mat4 model = glm::mat4(1.0f);
 
+static const char* vShader = "shaders/shader.vertex";
+static const char* fShader = "shaders/shader.fragment";
+
 // GLEW
 #define GLEW_STATIC
 #include <GL/glew.h>
@@ -17,15 +20,12 @@ glm::mat4 model = glm::mat4(1.0f);
 // GLFW
 #include <GLFW/glfw3.h>
 
+#include "Window.hpp"
 #include "Mesh.hpp"
 #include "Shader.hpp"
 
 std::vector<Mesh*> meshList;
 std::vector<Shader*> shaderList;
-
-// Window dimensions
-const GLint WIDTH = 800;
-const GLint HEIGHT = 600;
 
 float curAngle = 0.0f;
 
@@ -37,37 +37,6 @@ bool direction = true;
 float triOffset = 0.0f;
 float triMaxOffset = 1.0f;
 float triIncrement = 0.005f;
-
-// Vertex Shader lets us modify vertices and pass the result onto the fragment shader
-static const char* vShader = "\n\
-// Version of GLSL                  \n\
-# version 330                       \n\
-// Values from code below are passed into 'zero' in the shader. You can also make it search by name and not need layout. layout() is only supported since version 3.2 \n\
-layout(location = 0) in vec3 pos;    \n\
-layout(location = 1) in vec3 color;  \n\
-// he uses 'v' to mean 'vertex'      \n\
-out vec3 vColor;                     \n\
-uniform mat4 modelMatrix;            \n\
-uniform mat4 projectionMatrix;       \n\
-void main() {                        \n\
-vColor = color;                      \n\
-// Example of swimming through 3d    \n\
-//vColor = vec3(modelMatrix * vec4(pos, 1.0)); \n\
-// Built in value ot the shader itself. Imagine there's an out vec4. It's built in, we can't see it. The values are calculated as the graphics pipeline goes, and this value is sent to the fragment shader. These are the final positions of the vertices on the screen. Z is how far away this thing is from us \n\
-gl_Position = projectionMatrix * modelMatrix * vec4(pos, 1.0); \n\
-}                                    \n\
-";
-
-static const char* fShader = "\n\
-// Version of GLSL                   \n\
-# version 330                        \n\
-// Fragment shader only has one output usually, so we don't need to define this as special or default \n\
-out vec4 color;                      \n\
-in vec3 vColor;                      \n\
-void main() {                        \n\
-  color = vec4(vColor, 1.0);  \n\
-} \n\
-";
 
 // Create vertex array object - holds multiple VBOs
 // Create vertex buffer object
@@ -109,70 +78,16 @@ void createTriangle() {
 
 void createShaders() {
     Shader *shader1 = new Shader();
-    shader1->createFromString(vShader, fShader);
+    shader1->createFromFiles(vShader, fShader);
     shaderList.push_back(shader1);
 }
 
 int main() {
-    // Initialize glfw. Function returns false if fail
-    if(!glfwInit()) {
-        printf("GLFW initializeation failed");
-        glfwTerminate();
-        return 1;
-    }
+    Window window = Window(800, 600);
+    window.initialize();
 
-    // Sets properties of window we're going to create
-    // Takes enums as first argument
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    
-    // Set the profile to "core". How openGL treats code it's passed. Core is not backwards compatible
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    // Allow forard compatibility
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-    
-    // Create the window itself, and a pointer to the window
-    GLFWwindow *window = glfwCreateWindow(WIDTH, HEIGHT, "OpenGL Class", nullptr, nullptr);
-    if(!window) {
-        printf("GLFW window creation failed");
-        glfwTerminate();
-        return 1;
-    }
-    
-    // Get buffer size information. We want to get
-    // dimensions of area in the middle of the window,
-    // that holds all the opengl data. the viewport, the
-    // part that's getting drawn to
-    int screenWidth, screenHeight;
-    glfwGetFramebufferSize(window, &screenWidth, &screenHeight); // basically required for mac, on mac with retina display, we'll get actual window size for our particular mac
-    
-    // Set context for glew to use
-    glfwMakeContextCurrent(window);
-    
-    // Enables us to access extensions, even though
-    // this course wont' use them
-    glewExperimental = GL_TRUE;
-    
-    // create the viewport
-    if(GLEW_OK != glewInit()) {
-        printf("Failed to initialize GLEW");
-        glfwDestroyWindow(window);
-        glfwTerminate();
-        return 1;
-    }
-    
-    // GL has a bunch of features turned off by default
-    glEnable(GL_DEPTH_TEST);
-    
-    // set where top left coords are, and width
-    // and height, which is the section in the middle,
-    // defined by width we got out of buffer size.
-    // This sets up our *viewport*
-    glViewport(0, 0, screenWidth, screenHeight);
-    
     // first view is up and down view angle
-    glm::mat4 projectionMatrix = glm::perspective(45.0f, (GLfloat)(screenWidth / screenHeight), 0.1f, 100.0f);
+    glm::mat4 projectionMatrix = glm::perspective(45.0f, (GLfloat)window.getBufferWidth() / (GLfloat)window.getBufferHeight(), 0.1f, 100.0f);
     
     createTriangle();
     // See https://stackoverflow.com/questions/54181078/opengl-3-3-mac-error-validating-program-validation-failed-no-vertex-array-ob
@@ -186,7 +101,7 @@ int main() {
     // "While the window is open, continue this game
     // loop". it knows based on a value hidden inside
     // glfw
-    while(!glfwWindowShouldClose(window)) {
+    while(!window.getShouldClose()) {
         // Get and handle user input events. Not
         // strictly an opengl thing, a glfw thing
         glfwPollEvents();
@@ -240,15 +155,8 @@ int main() {
         // Have to unbind after glUseProgram
         glUseProgram(0);
         
-        // In opengl there are two scenes going on at
-        // once. One that can't be seen that you're
-        // drawing to, and then you swap them so it
-        // can be scene. Now that we drew to a buffer,
-        // swap to it so we can see it
-        glfwSwapBuffers(window);
+        window.swapBuffers();
     }
-    
-    glfwTerminate();
     
     return 0;
 }

@@ -13,6 +13,8 @@
 		15323B17245F924B0018DA65 /* libglfw.3.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 15323B16245F924A0018DA65 /* libglfw.3.3.dylib */; };
 		155B3770246E627900615A2A /* Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 155B376E246E627900615A2A /* Shader.cpp */; };
 		159D67FC246E56DA00FB521E /* Mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 159D67FA246E56DA00FB521E /* Mesh.cpp */; };
+		15B5BCEC246E6B9C00B5E5DD /* shaders in CopyFiles */ = {isa = PBXBuildFile; fileRef = 15B5BCEB246E6B9C00B5E5DD /* shaders */; };
+		15B5BCEF246E6BD700B5E5DD /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15B5BCED246E6BD700B5E5DD /* Window.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -24,6 +26,16 @@
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 1;
+		};
+		15B5BCEA246E6B7000B5E5DD /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				15B5BCEC246E6B9C00B5E5DD /* shaders in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
@@ -37,6 +49,9 @@
 		155B376F246E627900615A2A /* Shader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Shader.hpp; sourceTree = "<group>"; };
 		159D67FA246E56DA00FB521E /* Mesh.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Mesh.cpp; sourceTree = "<group>"; };
 		159D67FB246E56DA00FB521E /* Mesh.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Mesh.hpp; sourceTree = "<group>"; };
+		15B5BCEB246E6B9C00B5E5DD /* shaders */ = {isa = PBXFileReference; lastKnownFileType = folder; name = shaders; path = ModernOpenGLClass/shaders; sourceTree = "<group>"; };
+		15B5BCED246E6BD700B5E5DD /* Window.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Window.cpp; sourceTree = "<group>"; };
+		15B5BCEE246E6BD700B5E5DD /* Window.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Window.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +71,7 @@
 		15323AFE245F90DE0018DA65 = {
 			isa = PBXGroup;
 			children = (
+				15B5BCEB246E6B9C00B5E5DD /* shaders */,
 				15323B09245F90DE0018DA65 /* ModernOpenGLClass */,
 				15323B08245F90DE0018DA65 /* Products */,
 				15323B11245F91DE0018DA65 /* Frameworks */,
@@ -78,6 +94,8 @@
 				15323B0A245F90DE0018DA65 /* main.cpp */,
 				159D67FA246E56DA00FB521E /* Mesh.cpp */,
 				159D67FB246E56DA00FB521E /* Mesh.hpp */,
+				15B5BCED246E6BD700B5E5DD /* Window.cpp */,
+				15B5BCEE246E6BD700B5E5DD /* Window.hpp */,
 			);
 			path = ModernOpenGLClass;
 			sourceTree = "<group>";
@@ -102,6 +120,7 @@
 				15323B03245F90DE0018DA65 /* Sources */,
 				15323B04245F90DE0018DA65 /* Frameworks */,
 				15323B05245F90DE0018DA65 /* CopyFiles */,
+				15B5BCEA246E6B7000B5E5DD /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -152,6 +171,7 @@
 				159D67FC246E56DA00FB521E /* Mesh.cpp in Sources */,
 				155B3770246E627900615A2A /* Shader.cpp in Sources */,
 				15323B0B245F90DE0018DA65 /* main.cpp in Sources */,
+				15B5BCEF246E6BD700B5E5DD /* Window.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

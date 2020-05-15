@@ -1,0 +1,8 @@
+// Version of GLSL                  
+# version 330                       
+// Fragment shader only has one output usually, so we don't need to define this as special or default
+out vec4 color;                     
+in vec3 vColor;                     
+void main() {                       
+  color = vec4(vColor, 1.0); 
+}
