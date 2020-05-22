@@ -11,12 +11,24 @@
 Window::Window() {
     width = 800;
     height = 600;
+    
+    for(size_t i = 0; i < 1024; i++) {
+        keys[i] = 0;
+    }
 };
 
 Window::Window(GLint _width, GLint _height) {
     width = _width;
     height = _height;
+
+    xChange = 0;
+    yChange = 0;
+    
+    for(size_t i = 0; i < 1024; i++) {
+        keys[i] = 0;
+    }
 }
+
 int Window::initialize() {
     // Initialize glfw. Function returns false if fail
     if(!glfwInit()) {
@@ -74,7 +86,66 @@ int Window::initialize() {
     // This sets up our *viewport*
     glViewport(0, 0, bufferWidth, bufferHeight);
     
+    glfwSetWindowUserPointer(window, this);
+    createCallbacks();
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    
     return 0;
+}
+
+void Window::createCallbacks() {
+    glfwSetKeyCallback(window, handleKeys);
+    glfwSetCursorPosCallback(window, handleMouse);
+}
+
+bool* Window::getKeys() {
+    return keys;
+}
+
+GLfloat Window::getXChange() {
+    GLfloat x = xChange;
+    xChange = 0.0f;
+    return x;
+}
+
+GLfloat Window::getYChange() {
+    GLfloat y = yChange;
+    yChange = 0.0f;
+    return y;
+}
+
+void Window:: handleMouse(GLFWwindow* window, double x, double y) {
+    Window* self = static_cast<Window*>(glfwGetWindowUserPointer(window));
+    
+    if(self->mouseFirstMoved) {
+        self->lastX = x;
+        self->lastY = y;
+        self->mouseFirstMoved = false;
+    }
+    
+    self->xChange = x - self->lastX;
+    self->yChange = self->lastY - y;
+    
+    self->lastX = x;
+    self->lastY = y;
+}
+
+void Window::handleKeys(GLFWwindow* window, int key, int code, int action, int mode) {
+    Window* self = static_cast<Window*>(glfwGetWindowUserPointer(window));
+    
+    if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+        glfwSetWindowShouldClose(window, GL_TRUE);
+    }
+    
+    if(key >= 0 && key < 1014) {
+        if(action == GLFW_PRESS) {
+            self->keys[key] = true;
+            printf("pressed dingus %d", key);
+        }
+        if(action == GLFW_RELEASE) {
+            self->keys[key] = false;
+        }
+    }
 }
 
 Window::~Window() {

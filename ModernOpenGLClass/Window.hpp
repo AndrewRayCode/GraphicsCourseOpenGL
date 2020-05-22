@@ -44,6 +44,19 @@ private:
     GLFWwindow *window;
     GLint width, height;
     GLint bufferWidth, bufferHeight;
+    GLfloat lastX, lastY, xChange, yChange;
+    bool mouseFirstMoved;
+    
+    bool* getKeys();
+    GLfloat getXChange();
+    GLfloat getYChange();
+    
+    // range of ascii characters
+    bool keys[1024];
+    
+    void createCallbacks();
+    static void handleKeys(GLFWwindow* window, int key, int code, int action, int mode);
+    static void handleMouse(GLFWwindow* window, double x, double y);
 };
 
 
