@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1503DAAB24A973940052B020 /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1503DAA924A973940052B020 /* Texture.cpp */; };
+		1503DAAE24A99E010052B020 /* textures in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1503DAAD24A97EDD0052B020 /* textures */; };
+		1517370A2484ADCA00F88FA2 /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 151737082484ADCA00F88FA2 /* Camera.cpp */; };
 		15323B0B245F90DE0018DA65 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15323B0A245F90DE0018DA65 /* main.cpp */; };
 		15323B13245F91DF0018DA65 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15323B12245F91DF0018DA65 /* OpenGL.framework */; };
 		15323B15245F92130018DA65 /* libGLEW.2.1.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 15323B14245F92130018DA65 /* libGLEW.2.1.0.dylib */; };
@@ -33,6 +36,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
+				1503DAAE24A99E010052B020 /* textures in CopyFiles */,
 				15B5BCEC246E6B9C00B5E5DD /* shaders in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -40,6 +44,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1503DAA924A973940052B020 /* Texture.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Texture.cpp; sourceTree = "<group>"; };
+		1503DAAA24A973940052B020 /* Texture.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Texture.hpp; sourceTree = "<group>"; };
+		1503DAAC24A97EDD0052B020 /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
+		1503DAAD24A97EDD0052B020 /* textures */ = {isa = PBXFileReference; lastKnownFileType = folder; name = textures; path = ModernOpenGLClass/textures; sourceTree = "<group>"; };
+		151737082484ADCA00F88FA2 /* Camera.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Camera.cpp; sourceTree = "<group>"; };
+		151737092484ADCA00F88FA2 /* Camera.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Camera.hpp; sourceTree = "<group>"; };
 		15323B07245F90DE0018DA65 /* ModernOpenGLClass */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ModernOpenGLClass; sourceTree = BUILT_PRODUCTS_DIR; };
 		15323B0A245F90DE0018DA65 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		15323B12245F91DF0018DA65 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
@@ -71,6 +81,7 @@
 		15323AFE245F90DE0018DA65 = {
 			isa = PBXGroup;
 			children = (
+				1503DAAD24A97EDD0052B020 /* textures */,
 				15B5BCEB246E6B9C00B5E5DD /* shaders */,
 				15323B09245F90DE0018DA65 /* ModernOpenGLClass */,
 				15323B08245F90DE0018DA65 /* Products */,
@@ -89,6 +100,7 @@
 		15323B09245F90DE0018DA65 /* ModernOpenGLClass */ = {
 			isa = PBXGroup;
 			children = (
+				1503DAAC24A97EDD0052B020 /* stb_image.h */,
 				155B376E246E627900615A2A /* Shader.cpp */,
 				155B376F246E627900615A2A /* Shader.hpp */,
 				15323B0A245F90DE0018DA65 /* main.cpp */,
@@ -96,6 +108,10 @@
 				159D67FB246E56DA00FB521E /* Mesh.hpp */,
 				15B5BCED246E6BD700B5E5DD /* Window.cpp */,
 				15B5BCEE246E6BD700B5E5DD /* Window.hpp */,
+				151737082484ADCA00F88FA2 /* Camera.cpp */,
+				151737092484ADCA00F88FA2 /* Camera.hpp */,
+				1503DAA924A973940052B020 /* Texture.cpp */,
+				1503DAAA24A973940052B020 /* Texture.hpp */,
 			);
 			path = ModernOpenGLClass;
 			sourceTree = "<group>";
@@ -170,6 +186,8 @@
 			files = (
 				159D67FC246E56DA00FB521E /* Mesh.cpp in Sources */,
 				155B3770246E627900615A2A /* Shader.cpp in Sources */,
+				1517370A2484ADCA00F88FA2 /* Camera.cpp in Sources */,
+				1503DAAB24A973940052B020 /* Texture.cpp in Sources */,
 				15323B0B245F90DE0018DA65 /* main.cpp in Sources */,
 				15B5BCEF246E6BD700B5E5DD /* Window.cpp in Sources */,
 			);

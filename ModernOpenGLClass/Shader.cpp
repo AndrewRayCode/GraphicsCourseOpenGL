@@ -12,6 +12,8 @@ Shader::Shader() {
     shaderID = 0;
     uniformModelMatrix = 0;
     uniformProjectionMatrix = 0;
+    uniformViewMatrix = 0;
+    uniformImage = 0;
 }
 
 void Shader::useShader() {
@@ -134,6 +136,8 @@ void Shader::createFromString(const char* vertexCode, const char* fragmentCode) 
     // Get ID of uniform variable in compiled shader (by name)
     uniformModelMatrix = glGetUniformLocation(shaderID, "modelMatrix");
     uniformProjectionMatrix = glGetUniformLocation(shaderID, "projectionMatrix");
+    uniformViewMatrix = glGetUniformLocation(shaderID, "viewMatrix");
+    uniformImage = glGetUniformLocation(shaderID, "image");
 }
 
 
@@ -142,6 +146,12 @@ GLuint Shader::getProjectionLocation() {
 }
 GLuint Shader::getModelLocation() {
     return uniformModelMatrix;
+}
+GLuint Shader::getViewLocation() {
+    return uniformViewMatrix;
+}
+GLuint Shader::getImageLocation() {
+    return uniformImage;
 }
 
 Shader::~Shader() {

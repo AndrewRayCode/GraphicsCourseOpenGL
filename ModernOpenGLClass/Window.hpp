@@ -37,6 +37,10 @@ public:
     // can be scene. Now that we drew to a buffer,
     // swap to it so we can see it
     void swapBuffers() { glfwSwapBuffers(window); }
+    bool* getKeys();
+    
+    GLfloat getXChange();
+    GLfloat getYChange();
 
     ~Window();
 
@@ -45,11 +49,7 @@ private:
     GLint width, height;
     GLint bufferWidth, bufferHeight;
     GLfloat lastX, lastY, xChange, yChange;
-    bool mouseFirstMoved;
-    
-    bool* getKeys();
-    GLfloat getXChange();
-    GLfloat getYChange();
+    bool mouseFirstMoved = true;
     
     // range of ascii characters
     bool keys[1024];

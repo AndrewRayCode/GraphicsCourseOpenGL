@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdlib.h>
 #include <stdio.h>  // printf
 #include <string.h> // strlen
 #include <cmath> // math absolute
@@ -8,10 +9,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-glm::mat4 model = glm::mat4(1.0f);
-
-static const char* vShader = "shaders/shader.vertex";
-static const char* fShader = "shaders/shader.fragment";
+#define STB_IMAGE_IMPLEMENTATION
 
 // GLEW
 #define GLEW_STATIC
@@ -23,9 +21,22 @@ static const char* fShader = "shaders/shader.fragment";
 #include "Window.hpp"
 #include "Mesh.hpp"
 #include "Shader.hpp"
+#include "Camera.hpp"
+#include "Texture.hpp"
+
+glm::mat4 model = glm::mat4(1.0f);
+
+static const char* vShader = "shaders/shader.vertex";
+static const char* fShader = "shaders/shader.fragment";
+
+char const *brick = "textures/brick.png";
+char const *dirt = "textures/dirt.png";
 
 std::vector<Mesh*> meshList;
 std::vector<Shader*> shaderList;
+
+Texture brickTexture;
+Texture dirtTexture;
 
 float curAngle = 0.0f;
 
@@ -38,18 +49,20 @@ float triOffset = 0.0f;
 float triMaxOffset = 1.0f;
 float triIncrement = 0.005f;
 
-// Create vertex array object - holds multiple VBOs
-// Create vertex buffer object
-// Usually have multiple vbos per vao
-void createTriangle() {
+GLfloat deltaTime = 0.0f;
+GLfloat lastTime = 0.0f;
+
+// Create objects in our scene
+void createMeshes() {
 
     // by default in opengl, middle of screen is 0,0, and y is up/down,
     // x axis is left/right, and z is depth
     GLfloat vertices[] = {
-        -1.0f, -1.0f, 0.0f,
-        0.0f, 0.0f, 1.0f, // go into third dimension, new point added
-        1.0, -1.0f, 0.0f,
-        0.0f, 1.0f, 0.0f
+        // x,  y,     z     u,    v
+        -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 1.0f,   0.5f, 0.0f, // go into third dimension, new point added
+        1.0, -1.0f, 0.0f,   1.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,   0.5f, 1.0f
     };
     
     // The triangles defining the faces of the pyramid
@@ -68,11 +81,11 @@ void createTriangle() {
     };
     
     Mesh *obj = new Mesh();
-    obj->createMesh(vertices, indices, 12, 12, colors);
+    obj->createMesh(vertices, indices, 20, 12, colors);
     meshList.push_back(obj);
-
+    
     Mesh *obj2 = new Mesh();
-    obj2->createMesh(vertices, indices, 12, 12, colors);
+    obj2->createMesh(vertices, indices, 20, 12, colors);
     meshList.push_back(obj2);
 }
 
@@ -89,7 +102,7 @@ int main() {
     // first view is up and down view angle
     glm::mat4 projectionMatrix = glm::perspective(45.0f, (GLfloat)window.getBufferWidth() / (GLfloat)window.getBufferHeight(), 0.1f, 100.0f);
     
-    createTriangle();
+    createMeshes();
     // See https://stackoverflow.com/questions/54181078/opengl-3-3-mac-error-validating-program-validation-failed-no-vertex-array-ob
     // It looks like when validate hapens, it validates against existing opengl context, and since we unbound the vao, it wont' be in the context lol
 //    glBindVertexArray(VAO);
@@ -97,14 +110,36 @@ int main() {
     
     GLuint uniformProjectionMatrix = 0;
     GLuint uniformModelMatrix = 0;
+    GLuint uniformViewMatrix = 0;
+    GLuint uniformImage = 0;
+    
+    Camera *camera = new Camera(
+       glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f,
+                                0.0f, 5.0f, 0.4f
+    );
+    
+    brickTexture = Texture(brick);
+    brickTexture.loadTexture();
+
+    dirtTexture = Texture(dirt);
+    dirtTexture.loadTexture();
+    
+    lastTime = glfwGetTime();
     
     // "While the window is open, continue this game
     // loop". it knows based on a value hidden inside
     // glfw
     while(!window.getShouldClose()) {
+        GLfloat now = glfwGetTime();
+        deltaTime = now - lastTime;
+        lastTime = now;
+
         // Get and handle user input events. Not
         // strictly an opengl thing, a glfw thing
         glfwPollEvents();
+        
+        camera->keyControl(window.getKeys(), deltaTime);
+        camera->mouseControl(window.getXChange(), window.getYChange());
         
         triOffset = triOffset + (direction ? 1 : -1) * triIncrement * 2.0;
         if(abs(triOffset) >= triMaxOffset) {
@@ -126,6 +161,8 @@ int main() {
         shaderList[0]->useShader();
         uniformProjectionMatrix = shaderList[0]->getProjectionLocation();
         uniformModelMatrix = shaderList[0]->getModelLocation();
+        uniformViewMatrix = shaderList[0]->getViewLocation();
+        uniformImage = shaderList[0]->getImageLocation();
         
         // Create an identity matrix
         glm::mat4 model = glm::mat4(1.0f);
@@ -143,13 +180,17 @@ int main() {
         glUniformMatrix4fv(uniformModelMatrix, 1, GL_FALSE, glm::value_ptr(model));
         
         glUniformMatrix4fv(uniformProjectionMatrix, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-               
+        
+        glUniformMatrix4fv(uniformViewMatrix, 1, GL_FALSE, glm::value_ptr(camera->calculateViewMatrix()));
+
+        brickTexture.useTexture();
         meshList[0]->renderMesh();
         
         
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -4.0f));
         glUniformMatrix4fv(uniformModelMatrix, 1, GL_FALSE, glm::value_ptr(model));
+        dirtTexture.useTexture();
         meshList[1]->renderMesh();
 
         // Have to unbind after glUseProgram

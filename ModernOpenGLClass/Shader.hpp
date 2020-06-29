@@ -29,10 +29,12 @@ public:
 
     GLuint getProjectionLocation();
     GLuint getModelLocation();
+    GLuint getViewLocation();
+    GLuint getImageLocation();
     
     ~Shader();
 private:
-    GLuint shaderID, uniformProjectionMatrix, uniformModelMatrix;
+    GLuint shaderID, uniformProjectionMatrix, uniformModelMatrix, uniformViewMatrix, uniformImage;
     
     void compileShader();
     void addShader(GLuint program, const char* code, GLenum shaderType);

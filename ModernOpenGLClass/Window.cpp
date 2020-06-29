@@ -114,7 +114,7 @@ GLfloat Window::getYChange() {
     return y;
 }
 
-void Window:: handleMouse(GLFWwindow* window, double x, double y) {
+void Window::handleMouse(GLFWwindow* window, double x, double y) {
     Window* self = static_cast<Window*>(glfwGetWindowUserPointer(window));
     
     if(self->mouseFirstMoved) {
@@ -122,10 +122,10 @@ void Window:: handleMouse(GLFWwindow* window, double x, double y) {
         self->lastY = y;
         self->mouseFirstMoved = false;
     }
-    
+
     self->xChange = x - self->lastX;
     self->yChange = self->lastY - y;
-    
+
     self->lastX = x;
     self->lastY = y;
 }

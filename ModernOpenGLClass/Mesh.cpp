@@ -1,5 +1,6 @@
-#include "Mesh.hpp"
+#include <iostream>
 #include <GL/glew.h>
+#include "Mesh.hpp"
 
 Mesh::Mesh() {
     VAO = 0;
@@ -8,11 +9,40 @@ Mesh::Mesh() {
     indexCount = 0;
 }
 
-void Mesh::createMesh(
-    GLfloat *vertices, unsigned int *indices, unsigned int numOfVertices, unsigned int numOfIndices, GLfloat *attributes
-) {
+// by default in opengl, middle of screen is 0,0, and y is up/down,
+// x axis is left/right, and z is depth
+//GLfloat vertices[] = {
+//    // x,  y,     z     u,    v
+//    -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+//    0.0f, 0.0f, 1.0f,   0.5f, 0.0f, // go into third dimension, new point added
+//    1.0, -1.0f, 0.0f,   1.0f, 0.0f,
+//    0.0f, 1.0f, 0.0f,   0.5f, 1.0f
+//};
+//
+//// The triangles defining the faces of the pyramid
+//unsigned int indices[] = {
+//    0, 3, 1,
+//    1, 3, 2,
+//    2, 3, 0,
+//    0, 1, 2
+//};
+//
+//GLfloat colors[] = {
+//  1.0f, 0.0f, 0.0f,
+//  0.0f, 1.0f, 0.0f,
+//  0.0f, 0.0f, 1.0f,
+//  1.0f, 1.0f, 1.0f
+//};
+//
+//Mesh *obj = new Mesh();
+//obj->createMesh(vertices, indices, 20, 12, colors);
 
-    indexCount = numOfIndices;
+
+
+void Mesh::createMesh(
+    GLfloat *vertices, unsigned int *vertexData, unsigned int vertexDataLength, unsigned int numberOfVertices, GLfloat *colorData
+) {
+    indexCount = numberOfVertices;
 
     // ammount of arrays we want to create, and where we want to store
     // the ID of the array. This defines space on the graphics card memory!
@@ -26,11 +56,10 @@ void Mesh::createMesh(
     // IBO / EBO = index / element buffer
     glGenBuffers(1, &IBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0]) * numOfVertices, indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(vertexData[0]) * vertexDataLength, vertexData, GL_STATIC_DRAW);
     
     // Create buffers (how many buffers, and ID we want to use). We've created a buffer
     // object inside the VAO
-//    GLuint mahBufs[2];
     glGenBuffers(1, &VBO);
     
     // Which buffer we want to bind to. A VBO has multiple targets it can bind to
@@ -41,9 +70,8 @@ void Mesh::createMesh(
     // then the data, then GL_STATIC_DRAW or GL_DYNAMIC_DRAW, static meaning we wont change
     // the values in the array. Dynamic lets you change vertex positions while the program is
     // running but it's more complex
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * numOfVertices, vertices, GL_STATIC_DRAW);
-                 
-    // Wont' make as much sense until we get to shaders
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * vertexDataLength, vertices, GL_STATIC_DRAW);
+
     // - location of attribute we create shader for. We want to point to attribute 0 in shader
     // - size of each value getting passed in
     // - type of these values
@@ -53,22 +81,33 @@ void Mesh::createMesh(
     //   value, etc. We don't want to stride, it's tightly packed data, so 0 skip
     // - Offset, where data starts, in our case there's no reason to use offset. If you only want
     //   to draw part of the object you can start at a different place
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    
+    // Update to this: We increased stride to five, because in the vertex array, we're adding
+    // two values to each vertex, the u and v
+    int vetexPositionLocation = 0;
+    glVertexAttribPointer(vetexPositionLocation, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 5, 0);
+
     // In the shader, we want to enable the usage of the location we mentioned above
-    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(vetexPositionLocation);
+    
+    // ------ UV from class
+    // The last (void*) converts it to a pointer to our value. Sets up for slot 1, for layout= in shader,
+    // where you can set the value of the attribute you want to point to. Attribute 0 is the position,
+    // attribute 1 is texture coordinate
+    int uvAttributeLocation = 1;
+    glVertexAttribPointer(uvAttributeLocation, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 5, (void*)(sizeof(vertices[0] * 3)));
+    glEnableVertexAttribArray(uvAttributeLocation);
     
     // bind vbo to nothing (unbinding). Some people like to indent the bind from above to here
     glBindBuffer(GL_ARRAY_BUFFER, 0);
       
-    // Andy adding vertex colors!
+    // ------ Andy adding vertex colors!
+    int vertexColorLocation = 2;
     glGenBuffers(1, &VBO1);
     glBindBuffer(GL_ARRAY_BUFFER, VBO1);
 
-    glBufferData(GL_ARRAY_BUFFER, sizeof(attributes[0]) * numOfIndices, attributes, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    glEnableVertexAttribArray(1);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(colorData[0]) * 12.0f, colorData, GL_STATIC_DRAW);
+    glVertexAttribPointer(vertexColorLocation, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(vertexColorLocation);
 
     // unbind
     glBindBuffer(GL_ARRAY_BUFFER, 0);
