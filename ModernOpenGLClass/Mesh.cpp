@@ -71,6 +71,9 @@ void Mesh::createMesh(
     // the values in the array. Dynamic lets you change vertex positions while the program is
     // running but it's more complex
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * vertexDataLength, vertices, GL_STATIC_DRAW);
+    
+    // Our data is a flat array. How many elements belong to each vertex?
+    int columns = 8;
 
     // - location of attribute we create shader for. We want to point to attribute 0 in shader
     // - size of each value getting passed in
@@ -84,19 +87,25 @@ void Mesh::createMesh(
     // Update to this: We increased stride to five, because in the vertex array, we're adding
     // two values to each vertex, the u and v
     int vetexPositionLocation = 0;
-    glVertexAttribPointer(vetexPositionLocation, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 5, 0);
+    glVertexAttribPointer(vetexPositionLocation, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * columns, 0);
 
     // In the shader, we want to enable the usage of the location we mentioned above
     glEnableVertexAttribArray(vetexPositionLocation);
     
     // ------ UV from class
     // The last (void*) converts it to a pointer to our value. Sets up for slot 1, for layout= in shader,
-    // where you can set the value of the attribute you want to point to. Attribute 0 is the position,
-    // attribute 1 is texture coordinate
+    // where you can set the value of the attribute you want to point to.
+    // UVs start 3 in from each vertex start
     int uvAttributeLocation = 1;
-    glVertexAttribPointer(uvAttributeLocation, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 5, (void*)(sizeof(vertices[0] * 3)));
+    glVertexAttribPointer(uvAttributeLocation, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * columns, (void*)(sizeof(vertices[0] * 3)));
     glEnableVertexAttribArray(uvAttributeLocation);
     
+    // ------ Normals from class
+    // Normals start 5 in from each vertex start
+    int normalAttributeLocation = 3;
+    glVertexAttribPointer(normalAttributeLocation, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * columns, (void*)(sizeof(vertices[0] * 5)));
+    glEnableVertexAttribArray(normalAttributeLocation);
+
     // bind vbo to nothing (unbinding). Some people like to indent the bind from above to here
     glBindBuffer(GL_ARRAY_BUFFER, 0);
       

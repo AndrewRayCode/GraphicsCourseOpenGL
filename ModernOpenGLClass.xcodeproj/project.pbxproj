@@ -15,9 +15,11 @@
 		15323B15245F92130018DA65 /* libGLEW.2.1.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 15323B14245F92130018DA65 /* libGLEW.2.1.0.dylib */; };
 		15323B17245F924B0018DA65 /* libglfw.3.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 15323B16245F924A0018DA65 /* libglfw.3.3.dylib */; };
 		155B3770246E627900615A2A /* Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 155B376E246E627900615A2A /* Shader.cpp */; };
+		158395F424CE866500153C0A /* Material.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 158395F224CE866500153C0A /* Material.cpp */; };
 		159D67FC246E56DA00FB521E /* Mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 159D67FA246E56DA00FB521E /* Mesh.cpp */; };
 		15B5BCEC246E6B9C00B5E5DD /* shaders in CopyFiles */ = {isa = PBXBuildFile; fileRef = 15B5BCEB246E6B9C00B5E5DD /* shaders */; };
 		15B5BCEF246E6BD700B5E5DD /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15B5BCED246E6BD700B5E5DD /* Window.cpp */; };
+		15DB540B24AC3B5900BE41A9 /* Light.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15DB540924AC3B5900BE41A9 /* Light.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -57,11 +59,15 @@
 		15323B16245F924A0018DA65 /* libglfw.3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.3.dylib; path = ../../../usr/local/Cellar/glfw/3.3.2/lib/libglfw.3.3.dylib; sourceTree = "<group>"; };
 		155B376E246E627900615A2A /* Shader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Shader.cpp; sourceTree = "<group>"; };
 		155B376F246E627900615A2A /* Shader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Shader.hpp; sourceTree = "<group>"; };
+		158395F224CE866500153C0A /* Material.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Material.cpp; sourceTree = "<group>"; };
+		158395F324CE866500153C0A /* Material.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Material.hpp; sourceTree = "<group>"; };
 		159D67FA246E56DA00FB521E /* Mesh.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Mesh.cpp; sourceTree = "<group>"; };
 		159D67FB246E56DA00FB521E /* Mesh.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Mesh.hpp; sourceTree = "<group>"; };
 		15B5BCEB246E6B9C00B5E5DD /* shaders */ = {isa = PBXFileReference; lastKnownFileType = folder; name = shaders; path = ModernOpenGLClass/shaders; sourceTree = "<group>"; };
 		15B5BCED246E6BD700B5E5DD /* Window.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Window.cpp; sourceTree = "<group>"; };
 		15B5BCEE246E6BD700B5E5DD /* Window.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Window.hpp; sourceTree = "<group>"; };
+		15DB540924AC3B5900BE41A9 /* Light.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Light.cpp; sourceTree = "<group>"; };
+		15DB540A24AC3B5900BE41A9 /* Light.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Light.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +118,10 @@
 				151737092484ADCA00F88FA2 /* Camera.hpp */,
 				1503DAA924A973940052B020 /* Texture.cpp */,
 				1503DAAA24A973940052B020 /* Texture.hpp */,
+				15DB540924AC3B5900BE41A9 /* Light.cpp */,
+				15DB540A24AC3B5900BE41A9 /* Light.hpp */,
+				158395F224CE866500153C0A /* Material.cpp */,
+				158395F324CE866500153C0A /* Material.hpp */,
 			);
 			path = ModernOpenGLClass;
 			sourceTree = "<group>";
@@ -184,9 +194,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				15DB540B24AC3B5900BE41A9 /* Light.cpp in Sources */,
 				159D67FC246E56DA00FB521E /* Mesh.cpp in Sources */,
 				155B3770246E627900615A2A /* Shader.cpp in Sources */,
 				1517370A2484ADCA00F88FA2 /* Camera.cpp in Sources */,
+				158395F424CE866500153C0A /* Material.cpp in Sources */,
 				1503DAAB24A973940052B020 /* Texture.cpp in Sources */,
 				15323B0B245F90DE0018DA65 /* main.cpp in Sources */,
 				15B5BCEF246E6BD700B5E5DD /* Window.cpp in Sources */,
