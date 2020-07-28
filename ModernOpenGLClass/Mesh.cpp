@@ -56,7 +56,7 @@ void Mesh::createMesh(
     // IBO / EBO = index / element buffer
     glGenBuffers(1, &IBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(vertexData[0]) * vertexDataLength, vertexData, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(vertexData[0]) * numberOfVertices, vertexData, GL_STATIC_DRAW);
     
     // Create buffers (how many buffers, and ID we want to use). We've created a buffer
     // object inside the VAO
@@ -97,13 +97,13 @@ void Mesh::createMesh(
     // where you can set the value of the attribute you want to point to.
     // UVs start 3 in from each vertex start
     int uvAttributeLocation = 1;
-    glVertexAttribPointer(uvAttributeLocation, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * columns, (void*)(sizeof(vertices[0] * 3)));
+    glVertexAttribPointer(uvAttributeLocation, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * columns, (void*)(sizeof(vertices[0]) * 3));
     glEnableVertexAttribArray(uvAttributeLocation);
     
     // ------ Normals from class
     // Normals start 5 in from each vertex start
     int normalAttributeLocation = 3;
-    glVertexAttribPointer(normalAttributeLocation, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * columns, (void*)(sizeof(vertices[0] * 5)));
+    glVertexAttribPointer(normalAttributeLocation, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * columns, (void*)(sizeof(vertices[0]) * 5));
     glEnableVertexAttribArray(normalAttributeLocation);
 
     // bind vbo to nothing (unbinding). Some people like to indent the bind from above to here
@@ -120,12 +120,19 @@ void Mesh::createMesh(
 
     // unbind
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+    
+    // He says need to unbind the IBO *afteR* the VAO
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     // and unbind vao
     glBindVertexArray(0);
     
-    // He says need to unbind the IBO *afteR* the VAO
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    /*
+     layout(location = 0) in vec3 pos;
+     layout(location = 1) in vec2 uv;
+     layout(location = 2) in vec3 color;
+     layout(location = 3) in vec3 normal;
+     */
 }
 
 void Mesh::renderMesh() {

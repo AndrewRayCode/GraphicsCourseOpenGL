@@ -15,14 +15,14 @@
 
 class Light {
 public:
-    Light(GLfloat red, GLfloat green, GLfloat blue, GLfloat ambientIntensity, GLfloat xDir, GLfloat yDir, GLfloat zDir, GLfloat intensity);
+    Light();
+    Light(GLfloat red, GLfloat green, GLfloat blue, GLfloat ambientIntensity, GLfloat intensity);
     
-    void useLight(GLfloat ambientIntensityLocation, GLfloat ambientColorLocation, GLfloat diffuseIntensityLocation, GLfloat directionLocation);
-    void setDirection(GLfloat xDir, GLfloat yDir, GLfloat zDir);
+    void useLight(GLfloat ambientIntensityLocation, GLfloat ambientColorLocation, GLfloat diffuseIntensityLocation);
     
     ~Light();
 
-private:
+protected:
     glm::vec3 color, direction;
     GLfloat ambientIntensity, diffuseIntensity;
 };

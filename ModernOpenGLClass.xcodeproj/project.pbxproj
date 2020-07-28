@@ -15,6 +15,8 @@
 		15323B15245F92130018DA65 /* libGLEW.2.1.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 15323B14245F92130018DA65 /* libGLEW.2.1.0.dylib */; };
 		15323B17245F924B0018DA65 /* libglfw.3.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 15323B16245F924A0018DA65 /* libglfw.3.3.dylib */; };
 		155B3770246E627900615A2A /* Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 155B376E246E627900615A2A /* Shader.cpp */; };
+		157939E524CFEA8100363D3B /* DirectionalLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 157939E324CFEA8100363D3B /* DirectionalLight.cpp */; };
+		157939E824CFF05700363D3B /* PointLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 157939E624CFF05700363D3B /* PointLight.cpp */; };
 		158395F424CE866500153C0A /* Material.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 158395F224CE866500153C0A /* Material.cpp */; };
 		159D67FC246E56DA00FB521E /* Mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 159D67FA246E56DA00FB521E /* Mesh.cpp */; };
 		15B5BCEC246E6B9C00B5E5DD /* shaders in CopyFiles */ = {isa = PBXBuildFile; fileRef = 15B5BCEB246E6B9C00B5E5DD /* shaders */; };
@@ -59,6 +61,11 @@
 		15323B16245F924A0018DA65 /* libglfw.3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.3.dylib; path = ../../../usr/local/Cellar/glfw/3.3.2/lib/libglfw.3.3.dylib; sourceTree = "<group>"; };
 		155B376E246E627900615A2A /* Shader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Shader.cpp; sourceTree = "<group>"; };
 		155B376F246E627900615A2A /* Shader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Shader.hpp; sourceTree = "<group>"; };
+		157939E324CFEA8100363D3B /* DirectionalLight.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = DirectionalLight.cpp; sourceTree = "<group>"; };
+		157939E424CFEA8100363D3B /* DirectionalLight.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DirectionalLight.hpp; sourceTree = "<group>"; };
+		157939E624CFF05700363D3B /* PointLight.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PointLight.cpp; sourceTree = "<group>"; };
+		157939E724CFF05700363D3B /* PointLight.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PointLight.hpp; sourceTree = "<group>"; };
+		157939E924CFF67400363D3B /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		158395F224CE866500153C0A /* Material.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Material.cpp; sourceTree = "<group>"; };
 		158395F324CE866500153C0A /* Material.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Material.hpp; sourceTree = "<group>"; };
 		159D67FA246E56DA00FB521E /* Mesh.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Mesh.cpp; sourceTree = "<group>"; };
@@ -122,6 +129,11 @@
 				15DB540A24AC3B5900BE41A9 /* Light.hpp */,
 				158395F224CE866500153C0A /* Material.cpp */,
 				158395F324CE866500153C0A /* Material.hpp */,
+				157939E324CFEA8100363D3B /* DirectionalLight.cpp */,
+				157939E424CFEA8100363D3B /* DirectionalLight.hpp */,
+				157939E624CFF05700363D3B /* PointLight.cpp */,
+				157939E724CFF05700363D3B /* PointLight.hpp */,
+				157939E924CFF67400363D3B /* Constants.h */,
 			);
 			path = ModernOpenGLClass;
 			sourceTree = "<group>";
@@ -195,7 +207,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				15DB540B24AC3B5900BE41A9 /* Light.cpp in Sources */,
+				157939E824CFF05700363D3B /* PointLight.cpp in Sources */,
 				159D67FC246E56DA00FB521E /* Mesh.cpp in Sources */,
+				157939E524CFEA8100363D3B /* DirectionalLight.cpp in Sources */,
 				155B3770246E627900615A2A /* Shader.cpp in Sources */,
 				1517370A2484ADCA00F88FA2 /* Camera.cpp in Sources */,
 				158395F424CE866500153C0A /* Material.cpp in Sources */,

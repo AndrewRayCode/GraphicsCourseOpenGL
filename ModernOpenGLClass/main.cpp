@@ -18,12 +18,14 @@
 // GLFW
 #include <GLFW/glfw3.h>
 
+#include "Constants.h"
 #include "Window.hpp"
 #include "Mesh.hpp"
 #include "Shader.hpp"
 #include "Camera.hpp"
 #include "Texture.hpp"
-#include "Light.hpp"
+#include "DirectionalLight.hpp"
+#include "PointLight.hpp"
 #include "Material.hpp"
 
 glm::mat4 model = glm::mat4(1.0f);
@@ -39,6 +41,8 @@ std::vector<Shader*> shaderList;
 
 Texture brickTexture;
 Texture dirtTexture;
+
+PointLight pointLights[MAX_POINT_LIGHTS];
 
 float curAngle = 0.0f;
 
@@ -136,6 +140,13 @@ void calcAverageNormals(unsigned int * indices, unsigned int indiceCount, GLfloa
 
 // Create objects in our scene
 void createMeshes() {
+    
+    GLfloat colors[] = {
+      1.0f, 0.0f, 0.0f,
+      0.0f, 1.0f, 0.0f,
+      0.0f, 0.0f, 1.0f,
+      1.0f, 1.0f, 1.0f
+    };
 
     // by default in opengl, middle of screen is 0,0, and y is up/down,
     // x axis is left/right, and z is depth
@@ -146,6 +157,20 @@ void createMeshes() {
         1.0,   -1.0f, -0.6f,  1.0f, 0.0f,    0.0f, 0.0f, 0.0f,
         0.0f,   1.0f, 0.0f,   0.5f, 1.0f,    0.0f, 0.0f, 0.0f
     };
+    
+    unsigned int floorIndices[] = {
+        0, 2, 1,
+        1, 2, 3
+    };
+    GLfloat floorVertices[] = {
+        -10.0f, 0.0f, -10.0f,   0.0f, 0.0f,    0.0f, -1.0f, 0.0f,
+        10.0f, 0.0f,  -10.0f,   10.0f, 0.0f,   0.0f, -1.0f, 0.0f,
+        -10.0f, 0.0f, 10.0f,    0.0f, 10.0f,   0.0f, -1.0f, 0.0f,
+        10.0f, 0.0f,  10.0f,    10.0f, 10.0f,  0.0f, -1.0f, 0.0f
+    };
+    Mesh *obj3 = new Mesh();
+    obj3->createMesh(floorVertices, floorIndices, 32, 6, colors);
+    meshList.push_back(obj3);
     
     // The triangles defining the faces of the pyramid
     unsigned int indices[] = {
@@ -158,13 +183,6 @@ void createMeshes() {
 //    calcNormals(indices, 12, vertices, 32, 8, 5);
     calcAverageNormals(indices, 12, vertices, 32, 8, 5);
 
-    GLfloat colors[] = {
-      1.0f, 0.0f, 0.0f,
-      0.0f, 1.0f, 0.0f,
-      0.0f, 0.0f, 1.0f,
-      1.0f, 1.0f, 1.0f
-    };
-    
     Mesh *obj = new Mesh();
     obj->createMesh(vertices, indices, 32, 12, colors);
     meshList.push_back(obj);
@@ -214,10 +232,28 @@ int main() {
     
     lastTime = glfwGetTime();
     
-    Light directionalLight = Light(1.0f, 1.0f, 1.0f, 0.3f,
-                                   2.0f, -1.0f, -2.0f, 0.3f);
+    DirectionalLight directionalLight = DirectionalLight(
+                                                         1.0f, 1.0f, 1.0f,
+                                                         0.1f, 0.3f,
+                                                         2.0f, -1.0f, -2.0f);
+
+    unsigned int pointLightCount = 2;
+    pointLights[0] = PointLight(0.0f, 1.0f, 0.0f,
+                                0.1f, 1.0f,
+                                -4.0f, 0.0f, 0.0f,
+                                0.3f, 0.2f, 0.1f);
     
-    Material shinyMaterial = Material(1.0f, 32);
+    pointLights[1] = PointLight(0.0f, 0.0f, 1.0f,
+                                0.1f, 1.0f,
+                                4.0f, 2.0f, 0.0f,
+                                0.3f, 0.2f, 0.1f);
+    
+//    pointLights[2] = PointLight(1.0f, 1.0f, 0.0f,
+//                                0.1f, 1.0f,
+//                                -4.0f, 0.0f, 0.0f,
+//                                0.3f, 0.1f, 0.1f);
+    
+    Material shinyMaterial = Material(4.0f, 256);
     Material dullMaterial = Material(1.0f, 4);
     
     // "While the window is open, continue this game
@@ -253,12 +289,9 @@ int main() {
         // what you normally do is draw everything with the same shader, draw, then reassign shader
 
         shaderList[0]->useShader();
-        directionalLight.useLight(
-                           shaderList[0]->getAmbientIntensityLocation(),
-                           shaderList[0]->getAmbientColorLocation(),
-                           shaderList[0]->getDiffuseIntensityLocation(),
-                           shaderList[0]->getDirectionLocation()
-                           );
+        
+        shaderList[0]->setDirectionalLight(&directionalLight);
+        shaderList[0]->setPointLights(pointLights, pointLightCount);
                            
         float angl = curAngle * 0.000;
 //        directionalLight.setDirection(2.0 * glm::cos(angl), 2.0 * glm::sin(angl), -2.0f);
@@ -284,9 +317,12 @@ int main() {
 //        model = glm::rotate(model, toRadians * curAngle, glm::vec3(0.0, 1.0, 0.0));
 //        model = glm::scale(model, glm::vec3(triOffset, triOffset, 1.0));
 
+
+        glm::mat4 model = glm::mat4(1.0f);
+
         // - MESH RENDER 1 ----
         // Create an identity matrix
-        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::mat4(1.0f);
         // Now set the uniform to the shader at the location (after attaching the shader)
         glUniformMatrix4fv(uniformModelMatrix, 1, GL_FALSE, glm::value_ptr(model));
         shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
@@ -300,6 +336,15 @@ int main() {
         dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
         dirtTexture.useTexture();
         meshList[1]->renderMesh();
+        
+        // - FLOOR -----
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, -4.0f, 0.0f));
+        // Now set the uniform to the shader at the location (after attaching the shader)
+        glUniformMatrix4fv(uniformModelMatrix, 1, GL_FALSE, glm::value_ptr(model));
+        shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
+        dirtTexture.useTexture();
+        meshList[2]->renderMesh();
 
         // Have to unbind after glUseProgram
         glUseProgram(0);
