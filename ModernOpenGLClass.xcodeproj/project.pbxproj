@@ -22,6 +22,7 @@
 		15B5BCEC246E6B9C00B5E5DD /* shaders in CopyFiles */ = {isa = PBXBuildFile; fileRef = 15B5BCEB246E6B9C00B5E5DD /* shaders */; };
 		15B5BCEF246E6BD700B5E5DD /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15B5BCED246E6BD700B5E5DD /* Window.cpp */; };
 		15DB540B24AC3B5900BE41A9 /* Light.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15DB540924AC3B5900BE41A9 /* Light.cpp */; };
+		15F4EFE825007F86006BF4DE /* SpotLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15F4EFE625007F86006BF4DE /* SpotLight.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -75,6 +76,8 @@
 		15B5BCEE246E6BD700B5E5DD /* Window.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Window.hpp; sourceTree = "<group>"; };
 		15DB540924AC3B5900BE41A9 /* Light.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Light.cpp; sourceTree = "<group>"; };
 		15DB540A24AC3B5900BE41A9 /* Light.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Light.hpp; sourceTree = "<group>"; };
+		15F4EFE625007F86006BF4DE /* SpotLight.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SpotLight.cpp; sourceTree = "<group>"; };
+		15F4EFE725007F86006BF4DE /* SpotLight.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SpotLight.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,6 +136,8 @@
 				157939E424CFEA8100363D3B /* DirectionalLight.hpp */,
 				157939E624CFF05700363D3B /* PointLight.cpp */,
 				157939E724CFF05700363D3B /* PointLight.hpp */,
+				15F4EFE625007F86006BF4DE /* SpotLight.cpp */,
+				15F4EFE725007F86006BF4DE /* SpotLight.hpp */,
 				157939E924CFF67400363D3B /* Constants.h */,
 			);
 			path = ModernOpenGLClass;
@@ -208,6 +213,7 @@
 			files = (
 				15DB540B24AC3B5900BE41A9 /* Light.cpp in Sources */,
 				157939E824CFF05700363D3B /* PointLight.cpp in Sources */,
+				15F4EFE825007F86006BF4DE /* SpotLight.cpp in Sources */,
 				159D67FC246E56DA00FB521E /* Mesh.cpp in Sources */,
 				157939E524CFEA8100363D3B /* DirectionalLight.cpp in Sources */,
 				155B3770246E627900615A2A /* Shader.cpp in Sources */,

@@ -140,7 +140,6 @@ void Window::handleKeys(GLFWwindow* window, int key, int code, int action, int m
     if(key >= 0 && key < 1014) {
         if(action == GLFW_PRESS) {
             self->keys[key] = true;
-            printf("pressed dingus %d", key);
         }
         if(action == GLFW_RELEASE) {
             self->keys[key] = false;

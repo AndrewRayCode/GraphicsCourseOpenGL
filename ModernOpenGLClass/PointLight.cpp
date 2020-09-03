@@ -36,3 +36,4 @@ void PointLight::useLight(
 }
 
 PointLight::~PointLight() {}
+ 

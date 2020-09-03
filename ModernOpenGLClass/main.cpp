@@ -26,6 +26,7 @@
 #include "Texture.hpp"
 #include "DirectionalLight.hpp"
 #include "PointLight.hpp"
+#include "SpotLight.hpp"
 #include "Material.hpp"
 
 glm::mat4 model = glm::mat4(1.0f);
@@ -43,6 +44,7 @@ Texture brickTexture;
 Texture dirtTexture;
 
 PointLight pointLights[MAX_POINT_LIGHTS];
+SpotLight spotLights[MAX_SPOT_LIGHTS];
 
 float curAngle = 0.0f;
 
@@ -168,9 +170,9 @@ void createMeshes() {
         -10.0f, 0.0f, 10.0f,    0.0f, 10.0f,   0.0f, -1.0f, 0.0f,
         10.0f, 0.0f,  10.0f,    10.0f, 10.0f,  0.0f, -1.0f, 0.0f
     };
-    Mesh *obj3 = new Mesh();
-    obj3->createMesh(floorVertices, floorIndices, 32, 6, colors);
-    meshList.push_back(obj3);
+    Mesh *floor = new Mesh();
+    floor->createMesh(floorVertices, floorIndices, 32, 6, colors);
+    meshList.push_back(floor);
     
     // The triangles defining the faces of the pyramid
     unsigned int indices[] = {
@@ -234,19 +236,36 @@ int main() {
     
     DirectionalLight directionalLight = DirectionalLight(
                                                          1.0f, 1.0f, 1.0f,
-                                                         0.1f, 0.3f,
+                                                         0.0f, 0.5f,
                                                          2.0f, -1.0f, -2.0f);
 
     unsigned int pointLightCount = 2;
     pointLights[0] = PointLight(0.0f, 1.0f, 0.0f,
-                                0.1f, 1.0f,
-                                -4.0f, 0.0f, 0.0f,
+                                0.0f, 1.0f,
+                                4.0f, 2.0f, -4.0f,
                                 0.3f, 0.2f, 0.1f);
     
     pointLights[1] = PointLight(0.0f, 0.0f, 1.0f,
-                                0.1f, 1.0f,
-                                4.0f, 2.0f, 0.0f,
+                                0.0f, 1.0f,
+                                4.0f, 2.0f, 4.0f,
                                 0.3f, 0.2f, 0.1f);
+
+    
+    unsigned int spotLightCount = 2;
+    spotLights[0] = SpotLight(1.0f, 0.0f, 0.0f,
+                                0.0f, 1.0f,
+                                -4.0f, 2.0f, 0.0f,
+                                0.0, -0.1f, 0.0f,
+                                0.3f, 0.2f, 0.1f,
+                              20.0f // 20 degrees
+                              );
+    
+    spotLights[1] = SpotLight(1.0f, 1.0f, 0.5f,
+                                0.0f, 1.0f,
+                                4.0f, 2.0f, 0.0f,
+                                0.0, -0.1f, 0.0f,
+                                0.3f, 0.2f, 0.1f,
+                              20.0f);
     
 //    pointLights[2] = PointLight(1.0f, 1.0f, 0.0f,
 //                                0.1f, 1.0f,
@@ -289,12 +308,6 @@ int main() {
         // what you normally do is draw everything with the same shader, draw, then reassign shader
 
         shaderList[0]->useShader();
-        
-        shaderList[0]->setDirectionalLight(&directionalLight);
-        shaderList[0]->setPointLights(pointLights, pointLightCount);
-                           
-        float angl = curAngle * 0.000;
-//        directionalLight.setDirection(2.0 * glm::cos(angl), 2.0 * glm::sin(angl), -2.0f);
         uniformProjectionMatrix = shaderList[0]->getProjectionLocation();
         uniformModelMatrix = shaderList[0]->getModelLocation();
         uniformViewMatrix = shaderList[0]->getViewLocation();
@@ -303,6 +316,13 @@ int main() {
         uniformEyePosition = shaderList[0]->getUniformEyePositionLocation();
         uniformSpecularIntensity = shaderList[0]->getUniformSpecularIntensityLocation();
         uniformShininess = shaderList[0]->getUniformShininessLocation();
+                
+        shaderList[0]->setDirectionalLight(&directionalLight);
+        shaderList[0]->setPointLights(pointLights, pointLightCount);
+        shaderList[0]->setSpotLights(spotLights, spotLightCount);
+                   
+        float angl = curAngle * 0.000;
+        //        directionalLight.setDirection(2.0 * glm::cos(angl), 2.0 * glm::sin(angl), -2.0f);
 
         glUniformMatrix4fv(uniformProjectionMatrix, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
         glUniformMatrix4fv(uniformViewMatrix, 1, GL_FALSE, glm::value_ptr(camera->calculateViewMatrix()));
@@ -323,27 +343,28 @@ int main() {
         // - MESH RENDER 1 ----
         // Create an identity matrix
         model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.5f));
         // Now set the uniform to the shader at the location (after attaching the shader)
         glUniformMatrix4fv(uniformModelMatrix, 1, GL_FALSE, glm::value_ptr(model));
-        shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
         brickTexture.useTexture();
+        shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
         meshList[0]->renderMesh();
         
         // - MESH RENDER 2 ----
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -4.0f));
+        model = glm::translate(model, glm::vec3(0.0f, 4.0f, -2.5f));
         glUniformMatrix4fv(uniformModelMatrix, 1, GL_FALSE, glm::value_ptr(model));
-        dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
         dirtTexture.useTexture();
+        dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
         meshList[1]->renderMesh();
         
         // - FLOOR -----
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, -4.0f, 0.0f));
+        model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
         // Now set the uniform to the shader at the location (after attaching the shader)
         glUniformMatrix4fv(uniformModelMatrix, 1, GL_FALSE, glm::value_ptr(model));
-        shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
         dirtTexture.useTexture();
+        shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
         meshList[2]->renderMesh();
 
         // Have to unbind after glUseProgram

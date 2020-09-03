@@ -9,6 +9,7 @@ in vec3 vNormal;
 in vec3 fragPosition;
 
 const int MAX_POINT_LIGHTS = 3;
+const int MAX_SPOT_LIGHTS = 3;
 
 struct Light {
     vec3 color;
@@ -30,15 +31,26 @@ struct PointLight {
     float exponent;
 };
 
+struct SpotLight {
+    PointLight base;
+    vec3 direction;
+    float edge;
+};
+
 struct Material {
     float specularIntensity;
     float shininess;
 };
 
-uniform int pointLightCount;
-uniform sampler2D image;
 uniform DirectionalLight directionalLight;
+
+uniform int pointLightCount;
 uniform PointLight pointLights[MAX_POINT_LIGHTS];
+
+uniform int spotLightCount;
+uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
+
+uniform sampler2D image;
 uniform Material material;
 
 uniform vec3 eyePosition;
@@ -53,7 +65,7 @@ vec4 colorize(in vec4 grayscale, in vec4 color) {
 }
 
 vec4 calcLightByDirection(Light light, vec3 direction) {
-    vec4 ambientColor = vec4(light.color, 1.0) * light.ambientIntensity;
+    vec4 ambientColor = vec4(light.color, 1.0f) * light.ambientIntensity;
 
     // The light hitting the thing, which is relative to how overhead the light is
     // to the face. not relative to the viewer's eye.
@@ -73,8 +85,10 @@ vec4 calcLightByDirection(Light light, vec3 direction) {
         
         // get dot product, cosine of angle between them, value between 0 and 1
         float specularFactor = dot(fragToEye, reflectedLightRay);
-        specularFactor = pow(specularFactor, material.shininess);
-        specularColor = vec4(light.color * material.specularIntensity * specularFactor, 1.0f);
+        if(specularFactor > 0.0f) {
+            specularFactor = pow(specularFactor, material.shininess);
+            specularColor = vec4(light.color * material.specularIntensity * specularFactor, 1.0f);
+        }
     }
     
     return ambientColor + diffuseColor + specularColor;
@@ -84,31 +98,67 @@ vec4 calcDirectionalLight() {
     return calcLightByDirection(directionalLight.base, directionalLight.direction);
 }
 
+vec4 calcPointLight(PointLight light) {
+    // get direction from fragment to the light
+    vec3 direction = fragPosition - light.position;
+    float distance = length(direction);
+    direction = normalize(direction);
+
+    // Calculate a normal directional light, then attenuate it
+    vec4 color = calcLightByDirection(light.base, direction);
+    float attenuation = light.exponent * distance * distance +
+       light.linear * distance +
+       light.constant;
+
+    return color / attenuation;
+}
+
+vec4 calcSpotLight(SpotLight light) {
+    // from where eye is to point being illuminated
+    vec3 rayDirection = normalize(fragPosition - light.base.position);
+    
+    // gets angle between direction to the point we're lighting, and the
+    // direction the light is facing. if the angle is small enough, we
+    // know we can light
+    float slFactor = dot(rayDirection, light.direction);
+    
+    // light edge is already cos(radians) which makes this work... I don't remember
+    // the math right now that makes this cone of influence check work
+    if(slFactor > light.edge * 0.06) {
+        vec4 color = calcPointLight(light.base);
+        return color;
+    } else {
+        return vec4(0.0, 0.0, 0.0, 0.0);
+    }
+}
+
+vec4 calcSpotLights() {
+    vec4 totalColor = vec4(0.0f);
+    for(int i = 0; i < spotLightCount; i++) {
+        totalColor += calcSpotLight(spotLights[i]);
+    }
+    return totalColor;
+}
+
 vec4 calcPointLights() {
     vec4 totalColor = vec4(0.0f);
     for(int i = 0; i < pointLightCount; i++) {
-        // get direction from fragment to the light
-        vec3 direction = fragPosition - pointLights[i].position;
-        float distance = length(direction);
-        direction = normalize(direction);
-
-        // Calculate a normal directional light, then atenuate it
-        vec4 color = calcLightByDirection(pointLights[i].base, direction);
-        float attenuation = pointLights[i].exponent * distance * distance +
-            pointLights[i].linear * distance +
-            pointLights[i].constant;
-        totalColor += color / attenuation;
+        totalColor += calcPointLight(pointLights[i]);
     }
     return totalColor;
 }
 
 void main() {
     vec4 textureColor = texture(image, vUv);
-    vec4 colorizedTexture = colorize(toGrayscale(textureColor), vec4(vColor, 1.0));
 
     vec4 finalColor = calcDirectionalLight();
     finalColor += calcPointLights();
+    finalColor += calcSpotLights();
 
+    // this is overwritten
+    vec4 colorizedTexture = colorize(toGrayscale(textureColor), vec4(vColor, 1.0));
     fragColor = colorizedTexture * finalColor;
+
+    fragColor = finalColor;
     fragColor = textureColor * finalColor;
 }
