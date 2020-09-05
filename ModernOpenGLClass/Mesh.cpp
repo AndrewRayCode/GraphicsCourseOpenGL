@@ -37,10 +37,8 @@ Mesh::Mesh() {
 //Mesh *obj = new Mesh();
 //obj->createMesh(vertices, indices, 20, 12, colors);
 
-
-
 void Mesh::createMesh(
-    GLfloat *vertices, unsigned int *vertexData, unsigned int vertexDataLength, unsigned int numberOfVertices, GLfloat *colorData
+    GLfloat *vertices, unsigned int *vertexData, unsigned int vertexDataLength, unsigned int numberOfVertices /*, GLfloat *colorData */
 ) {
     indexCount = numberOfVertices;
 
@@ -109,6 +107,7 @@ void Mesh::createMesh(
     // bind vbo to nothing (unbinding). Some people like to indent the bind from above to here
     glBindBuffer(GL_ARRAY_BUFFER, 0);
       
+    /*
     // ------ Andy adding vertex colors!
     int vertexColorLocation = 2;
     glGenBuffers(1, &VBO1);
@@ -117,6 +116,7 @@ void Mesh::createMesh(
     glBufferData(GL_ARRAY_BUFFER, sizeof(colorData[0]) * 12.0f, colorData, GL_STATIC_DRAW);
     glVertexAttribPointer(vertexColorLocation, 3, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(vertexColorLocation);
+     */
 
     // unbind
     glBindBuffer(GL_ARRAY_BUFFER, 0);

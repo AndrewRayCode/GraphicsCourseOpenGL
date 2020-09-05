@@ -8,11 +8,10 @@ SpotLight::SpotLight(
               GLfloat xDir, GLfloat yDir, GLfloat zDir,
               GLfloat constant, GLfloat linear, GLfloat exponent,
              GLfloat edg) : PointLight(red, green, blue, ai, di, x, y, z, constant, linear, exponent) {
-    position = glm::vec3(x, y, z);
+    position = glm::normalize(glm::vec3(x, y, z));
     direction = glm::vec3(xDir, yDir, zDir);
     edge = edg;
     processedEdge = cosf(glm::radians(edge));
-    printf("processedEdge: %f\n", processedEdge);
 }
 
 void SpotLight::useLight(GLuint ambientIntensityLocation, GLuint ambientColorLocation, GLuint diffuseIntensityLocation,
@@ -29,6 +28,11 @@ GLuint positionLocation, GLuint directionLocation, GLuint constantLocation, GLui
     // A spot light is a point light with a direction
     glUniform3f(directionLocation, direction.x, direction.y, direction.z);
     glUniform1f(edgeLocation, processedEdge);
+}
+
+void SpotLight::setFlash(glm::vec3 pos, glm::vec3 dir) {
+    position = pos;
+    direction = dir;
 }
 
 SpotLight::~SpotLight() {}

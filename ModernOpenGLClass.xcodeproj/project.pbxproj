@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1503DAAB24A973940052B020 /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1503DAA924A973940052B020 /* Texture.cpp */; };
 		1503DAAE24A99E010052B020 /* textures in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1503DAAD24A97EDD0052B020 /* textures */; };
+		151449DA250352800063089C /* libassimp.5.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1506B83E25034FB6007B00B6 /* libassimp.5.0.0.dylib */; };
 		1517370A2484ADCA00F88FA2 /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 151737082484ADCA00F88FA2 /* Camera.cpp */; };
 		15323B0B245F90DE0018DA65 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15323B0A245F90DE0018DA65 /* main.cpp */; };
 		15323B13245F91DF0018DA65 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15323B12245F91DF0018DA65 /* OpenGL.framework */; };
@@ -18,6 +19,7 @@
 		157939E524CFEA8100363D3B /* DirectionalLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 157939E324CFEA8100363D3B /* DirectionalLight.cpp */; };
 		157939E824CFF05700363D3B /* PointLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 157939E624CFF05700363D3B /* PointLight.cpp */; };
 		158395F424CE866500153C0A /* Material.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 158395F224CE866500153C0A /* Material.cpp */; };
+		1589D7AD2500C86000080BE3 /* Model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1589D7AB2500C86000080BE3 /* Model.cpp */; };
 		159D67FC246E56DA00FB521E /* Mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 159D67FA246E56DA00FB521E /* Mesh.cpp */; };
 		15B5BCEC246E6B9C00B5E5DD /* shaders in CopyFiles */ = {isa = PBXBuildFile; fileRef = 15B5BCEB246E6B9C00B5E5DD /* shaders */; };
 		15B5BCEF246E6BD700B5E5DD /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15B5BCED246E6BD700B5E5DD /* Window.cpp */; };
@@ -53,6 +55,7 @@
 		1503DAAA24A973940052B020 /* Texture.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Texture.hpp; sourceTree = "<group>"; };
 		1503DAAC24A97EDD0052B020 /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
 		1503DAAD24A97EDD0052B020 /* textures */ = {isa = PBXFileReference; lastKnownFileType = folder; name = textures; path = ModernOpenGLClass/textures; sourceTree = "<group>"; };
+		1506B83E25034FB6007B00B6 /* libassimp.5.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libassimp.5.0.0.dylib; path = ../../../../usr/local/Cellar/assimp/5.0.1/lib/libassimp.5.0.0.dylib; sourceTree = "<group>"; };
 		151737082484ADCA00F88FA2 /* Camera.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Camera.cpp; sourceTree = "<group>"; };
 		151737092484ADCA00F88FA2 /* Camera.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Camera.hpp; sourceTree = "<group>"; };
 		15323B07245F90DE0018DA65 /* ModernOpenGLClass */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ModernOpenGLClass; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -69,6 +72,9 @@
 		157939E924CFF67400363D3B /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		158395F224CE866500153C0A /* Material.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Material.cpp; sourceTree = "<group>"; };
 		158395F324CE866500153C0A /* Material.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Material.hpp; sourceTree = "<group>"; };
+		1589D7AB2500C86000080BE3 /* Model.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Model.cpp; sourceTree = "<group>"; };
+		1589D7AC2500C86000080BE3 /* Model.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Model.hpp; sourceTree = "<group>"; };
+		1589D7AE25033FB100080BE3 /* models */ = {isa = PBXFileReference; lastKnownFileType = folder; name = models; path = ModernOpenGLClass/models; sourceTree = "<group>"; };
 		159D67FA246E56DA00FB521E /* Mesh.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Mesh.cpp; sourceTree = "<group>"; };
 		159D67FB246E56DA00FB521E /* Mesh.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Mesh.hpp; sourceTree = "<group>"; };
 		15B5BCEB246E6B9C00B5E5DD /* shaders */ = {isa = PBXFileReference; lastKnownFileType = folder; name = shaders; path = ModernOpenGLClass/shaders; sourceTree = "<group>"; };
@@ -85,6 +91,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				151449DA250352800063089C /* libassimp.5.0.0.dylib in Frameworks */,
 				15323B15245F92130018DA65 /* libGLEW.2.1.0.dylib in Frameworks */,
 				15323B17245F924B0018DA65 /* libglfw.3.3.dylib in Frameworks */,
 				15323B13245F91DF0018DA65 /* OpenGL.framework in Frameworks */,
@@ -97,6 +104,7 @@
 		15323AFE245F90DE0018DA65 = {
 			isa = PBXGroup;
 			children = (
+				1589D7AE25033FB100080BE3 /* models */,
 				1503DAAD24A97EDD0052B020 /* textures */,
 				15B5BCEB246E6B9C00B5E5DD /* shaders */,
 				15323B09245F90DE0018DA65 /* ModernOpenGLClass */,
@@ -120,6 +128,8 @@
 				155B376E246E627900615A2A /* Shader.cpp */,
 				155B376F246E627900615A2A /* Shader.hpp */,
 				15323B0A245F90DE0018DA65 /* main.cpp */,
+				1589D7AB2500C86000080BE3 /* Model.cpp */,
+				1589D7AC2500C86000080BE3 /* Model.hpp */,
 				159D67FA246E56DA00FB521E /* Mesh.cpp */,
 				159D67FB246E56DA00FB521E /* Mesh.hpp */,
 				15B5BCED246E6BD700B5E5DD /* Window.cpp */,
@@ -146,6 +156,7 @@
 		15323B11245F91DE0018DA65 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1506B83E25034FB6007B00B6 /* libassimp.5.0.0.dylib */,
 				15323B16245F924A0018DA65 /* libglfw.3.3.dylib */,
 				15323B14245F92130018DA65 /* libGLEW.2.1.0.dylib */,
 				15323B12245F91DF0018DA65 /* OpenGL.framework */,
@@ -214,6 +225,7 @@
 				15DB540B24AC3B5900BE41A9 /* Light.cpp in Sources */,
 				157939E824CFF05700363D3B /* PointLight.cpp in Sources */,
 				15F4EFE825007F86006BF4DE /* SpotLight.cpp in Sources */,
+				1589D7AD2500C86000080BE3 /* Model.cpp in Sources */,
 				159D67FC246E56DA00FB521E /* Mesh.cpp in Sources */,
 				157939E524CFEA8100363D3B /* DirectionalLight.cpp in Sources */,
 				155B3770246E627900615A2A /* Shader.cpp in Sources */,
@@ -346,6 +358,7 @@
 					"$(inherited)",
 					/usr/local/Cellar/glew/2.1.0_1/lib,
 					/usr/local/Cellar/glfw/3.3.2/lib,
+					/usr/local/Cellar/assimp/5.0.1/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -360,6 +373,7 @@
 					"$(inherited)",
 					/usr/local/Cellar/glew/2.1.0_1/lib,
 					/usr/local/Cellar/glfw/3.3.2/lib,
+					/usr/local/Cellar/assimp/5.0.1/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

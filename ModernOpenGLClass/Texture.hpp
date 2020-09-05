@@ -18,7 +18,9 @@ public:
     Texture();
     Texture(const char* fileLocation);
     
-    void loadTexture();
+    bool loadTexture();
+    bool loadTextureAlpha();
+
     void useTexture();
     void clearTexture();
 

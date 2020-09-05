@@ -87,7 +87,11 @@ vec4 calcLightByDirection(Light light, vec3 direction) {
         float specularFactor = dot(fragToEye, reflectedLightRay);
         if(specularFactor > 0.0f) {
             specularFactor = pow(specularFactor, material.shininess);
-            specularColor = vec4(light.color * material.specularIntensity * specularFactor, 1.0f);
+            specularColor = vec4(
+                light.color *
+                light.diffuseIntensity * // I added this multiplier to turn down the specular thing
+                material.specularIntensity * specularFactor, 1.0f
+             );
         }
     }
     
@@ -124,11 +128,13 @@ vec4 calcSpotLight(SpotLight light) {
     
     // light edge is already cos(radians) which makes this work... I don't remember
     // the math right now that makes this cone of influence check work
-    if(slFactor > light.edge * 0.06) {
+    float edge = light.edge * 0.04;
+    edge = light.edge;
+    if(slFactor > edge) {
         vec4 color = calcPointLight(light.base);
-        return color;
+        return color * (1.0f - (1.0f - slFactor) * (1.0f / (1.0f - light.edge)));
     } else {
-        return vec4(0.0, 0.0, 0.0, 0.0);
+        return vec4(0.0f);
     }
 }
 

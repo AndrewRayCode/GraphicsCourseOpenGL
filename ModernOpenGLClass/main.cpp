@@ -28,6 +28,9 @@
 #include "PointLight.hpp"
 #include "SpotLight.hpp"
 #include "Material.hpp"
+#include "Model.hpp"
+
+#include <assimp/Importer.hpp>
 
 glm::mat4 model = glm::mat4(1.0f);
 
@@ -50,7 +53,7 @@ float curAngle = 0.0f;
 
 // Convert degrees to radians. Multiply this by
 // degrees to get radians
-const float toRadians = 3.14159265f / 180.0f;
+//const float toRadians = 3.14159265f / 180.0f;
 
 bool direction = true;
 float triOffset = 0.0f;
@@ -143,12 +146,14 @@ void calcAverageNormals(unsigned int * indices, unsigned int indiceCount, GLfloa
 // Create objects in our scene
 void createMeshes() {
     
+    /* removed for not using vertex colors
     GLfloat colors[] = {
       1.0f, 0.0f, 0.0f,
       0.0f, 1.0f, 0.0f,
       0.0f, 0.0f, 1.0f,
       1.0f, 1.0f, 1.0f
     };
+     */
 
     // by default in opengl, middle of screen is 0,0, and y is up/down,
     // x axis is left/right, and z is depth
@@ -171,7 +176,7 @@ void createMeshes() {
         10.0f, 0.0f,  10.0f,    10.0f, 10.0f,  0.0f, -1.0f, 0.0f
     };
     Mesh *floor = new Mesh();
-    floor->createMesh(floorVertices, floorIndices, 32, 6, colors);
+    floor->createMesh(floorVertices, floorIndices, 32, 6);
     meshList.push_back(floor);
     
     // The triangles defining the faces of the pyramid
@@ -186,11 +191,11 @@ void createMeshes() {
     calcAverageNormals(indices, 12, vertices, 32, 8, 5);
 
     Mesh *obj = new Mesh();
-    obj->createMesh(vertices, indices, 32, 12, colors);
+    obj->createMesh(vertices, indices, 32, 12);
     meshList.push_back(obj);
     
     Mesh *obj2 = new Mesh();
-    obj2->createMesh(vertices, indices, 32, 12, colors);
+    obj2->createMesh(vertices, indices, 32, 12);
     meshList.push_back(obj2);
 }
 
@@ -227,16 +232,16 @@ int main() {
     );
     
     brickTexture = Texture(brick);
-    brickTexture.loadTexture();
+    brickTexture.loadTextureAlpha();
 
     dirtTexture = Texture(dirt);
-    dirtTexture.loadTexture();
+    dirtTexture.loadTextureAlpha();
     
     lastTime = glfwGetTime();
     
     DirectionalLight directionalLight = DirectionalLight(
                                                          1.0f, 1.0f, 1.0f,
-                                                         0.0f, 0.5f,
+                                                         0.0f, 0.2f,
                                                          2.0f, -1.0f, -2.0f);
 
     unsigned int pointLightCount = 2;
@@ -250,21 +255,20 @@ int main() {
                                 4.0f, 2.0f, 4.0f,
                                 0.3f, 0.2f, 0.1f);
 
-    
-    unsigned int spotLightCount = 2;
-    spotLights[0] = SpotLight(1.0f, 0.0f, 0.0f,
-                                0.0f, 1.0f,
-                                -4.0f, 2.0f, 0.0f,
+    unsigned int spotLightCount = 1;
+    spotLights[0] = SpotLight(1.0f, 1.0f, 1.0f,
+                                0.0f, 3.0f,
+                                0.0f, 0.0f, 0.0f,
                                 0.0, -0.1f, 0.0f,
-                                0.3f, 0.2f, 0.1f,
+                              1.0f, 0.0f, 0.0f,
                               20.0f // 20 degrees
                               );
     
     spotLights[1] = SpotLight(1.0f, 1.0f, 0.5f,
                                 0.0f, 1.0f,
                                 4.0f, 2.0f, 0.0f,
-                                0.0, -0.1f, 0.0f,
-                                0.3f, 0.2f, 0.1f,
+                                1.0, -0.1f, 0.0f,
+                              1.0f, 0.0f, 0.0f,
                               20.0f);
     
 //    pointLights[2] = PointLight(1.0f, 1.0f, 0.0f,
@@ -274,6 +278,9 @@ int main() {
     
     Material shinyMaterial = Material(4.0f, 256);
     Material dullMaterial = Material(1.0f, 4);
+    
+    Model cottage = Model();
+    cottage.loadModel("/Users/andrewray/udemy/modern-opengl-class/ModernOpenGLClass/models/cottage/cottage_obj.obj");
     
     // "While the window is open, continue this game
     // loop". it knows based on a value hidden inside
@@ -316,12 +323,16 @@ int main() {
         uniformEyePosition = shaderList[0]->getUniformEyePositionLocation();
         uniformSpecularIntensity = shaderList[0]->getUniformSpecularIntensityLocation();
         uniformShininess = shaderList[0]->getUniformShininessLocation();
+        
+        glm::vec3 lowerLight = camera->getPosition();
+        lowerLight.y -= 0.1f;
+        spotLights[0].setFlash(lowerLight, camera->getDirection());
                 
         shaderList[0]->setDirectionalLight(&directionalLight);
         shaderList[0]->setPointLights(pointLights, pointLightCount);
         shaderList[0]->setSpotLights(spotLights, spotLightCount);
                    
-        float angl = curAngle * 0.000;
+//        float angl = curAngle * 0.000;
         //        directionalLight.setDirection(2.0 * glm::cos(angl), 2.0 * glm::sin(angl), -2.0f);
 
         glUniformMatrix4fv(uniformProjectionMatrix, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
@@ -366,6 +377,13 @@ int main() {
         dirtTexture.useTexture();
         shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
         meshList[2]->renderMesh();
+        
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
+        // Now set the uniform to the shader at the location (after attaching the shader)
+        glUniformMatrix4fv(uniformModelMatrix, 1, GL_FALSE, glm::value_ptr(model));
+        shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
+        cottage.renderModel();
 
         // Have to unbind after glUseProgram
         glUseProgram(0);

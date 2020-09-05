@@ -20,6 +20,8 @@ public:
     void useLight(GLuint ambientIntensityLocation, GLuint ambientColorLocation, GLuint diffuseIntensityLocation,
     GLuint positionLocation, GLuint directionLocation, GLuint constantLocation, GLuint linearLocation, GLuint exponentLocation, GLuint edgeLocation);
 
+    void setFlash(glm::vec3 pos, glm::vec3 dir);
+
     ~SpotLight();
 
 private:
